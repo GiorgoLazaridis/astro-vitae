@@ -1,0 +1,16 @@
+node_modules
+dist
+.env
+.env.local
+.git
+.astro
+.planning
+.playwright-mcp
+*.png
+*.md
+!README.md
+current-state.png
+redesign-*.png
+Thumbs.db
+.DS_Store
+.vscode

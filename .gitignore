@@ -1,0 +1,22 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.local
+.env.*.local
+.env.production
+.DS_Store
+Thumbs.db
+NUL
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.planning/
+.playwright-mcp/
+*.png
+*.jpeg
+
+# Allow tracked screenshots in docs/
+!docs/
+!docs/**
+!docs/**/*.png

@@ -1,0 +1,50 @@
+@import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
+@import './tokens.css';
+@import './animations.css';
+@import './components.css';
+@import './print.css';
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: optional;
+}
+
+@theme {
+  --font-sans: 'Geist', system-ui, sans-serif;
+  --font-mono: ui-monospace, monospace;
+  --color-accent-blue: #1d4ed8;
+  --color-accent-indigo: #4338ca;
+  --color-accent-blue-light: #60a5fa;
+  --color-accent-indigo-light: #818cf8;
+}
+
+html {
+  scroll-padding-top: 5rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+body.theme-transition {
+  transition: background-color 0.4s ease, color 0.3s ease;
+}
+
+::selection {
+  background-color: var(--accent);
+  color: white;
+}

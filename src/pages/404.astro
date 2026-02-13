@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { defaultLocale } from '../i18n/config';
+import { useTranslations } from '../i18n/utils';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+const lang = defaultLocale;
+const t = useTranslations(lang);
+const homeHref = getRelativeLocaleUrl(lang, '');
+---
+<BaseLayout title={`404 — ${t('error.notFound')}`} description={t('error.notFoundText')} noindex={true} lang={lang}>
+  <section class="pt-32 pb-20 px-6 min-h-[60vh] flex items-center" aria-label={t('error.notFound')}>
+    <div class="mx-auto max-w-lg text-center animate-fade-up">
+      <p class="text-8xl font-bold gradient-text mb-4">404</p>
+      <h1 class="text-2xl font-bold mb-3" style="color: var(--text);">{t('error.notFound')}</h1>
+      <p class="text-base mb-4" style="color: var(--text-muted);">{t('error.notFoundText')}</p>
+      <p class="text-sm mb-8" style="color: var(--text-muted);">{t('error.redirecting')} <span id="countdown" class="font-mono font-semibold" style="color: var(--accent);">5</span> {t('error.seconds')}</p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <a href={homeHref} class="inline-flex items-center gap-2 text-sm px-5 py-2.5 min-h-[44px] rounded-xl font-medium text-white transition-all duration-200 hover:opacity-90 hover:scale-[1.02]" style="background: linear-gradient(135deg, var(--accent), var(--accent-secondary));" aria-label={t('a11y.goHome')}>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 19l-7-7 7-7"/></svg>
+          {t('error.home')}
+        </a>
+      </div>
+      <script is:inline>
+        (function() {
+          var seconds = 5;
+          var c1 = document.getElementById('countdown');
+          var timer = setInterval(function() {
+            seconds--;
+            if (c1) c1.textContent = seconds;
+            if (seconds <= 0) {
+              clearInterval(timer);
+              window.location.href = '/';
+            }
+          }, 1000);
+        })();
+      </script>
+    </div>
+  </section>
+</BaseLayout>

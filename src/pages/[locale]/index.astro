@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+import About from '../../components/About.astro';
+import Timeline from '../../components/Timeline.astro';
+import Skills from '../../components/Skills.astro';
+import Languages from '../../components/Languages.astro';
+import Contact from '../../components/Contact.astro';
+import Portfolio from '../../components/Portfolio.astro';
+import { cvData } from '../../data/cv-data';
+import { getStaticLocalePaths } from '../../i18n/config';
+import type { Locale } from '../../i18n/config';
+import { useTranslations, resolve } from '../../i18n/utils';
+import { buildPersonJsonLd, buildWebSiteJsonLd, resolveExperienceEntries, resolveEducationEntries } from '../../lib/json-ld';
+
+export const getStaticPaths = getStaticLocalePaths;
+
+const lang = (Astro.params.locale as Locale) || 'en';
+const t = useTranslations(lang);
+
+const siteTitle = resolve(cvData.site.title, lang);
+const siteDescription = resolve(cvData.site.description, lang);
+
+const jsonLd = buildPersonJsonLd(lang);
+const webSiteJsonLd = buildWebSiteJsonLd(lang);
+const experienceEntries = resolveExperienceEntries(lang);
+const educationEntries = resolveEducationEntries(lang);
+---
+<BaseLayout title={siteTitle} description={siteDescription} lang={lang}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(webSiteJsonLd)} />
+  <div>
+    <Hero />
+    <About />
+    <Timeline heading={t('experience.heading')} id="experience" entries={experienceEntries} bgAlt />
+    <Timeline heading={t('education.heading')} id="education" entries={educationEntries} />
+    <Skills bgAlt />
+    <Languages />
+    <Portfolio bgAlt />
+    <Contact />
+  </div>
+</BaseLayout>

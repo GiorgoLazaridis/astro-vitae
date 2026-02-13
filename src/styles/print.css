@@ -1,0 +1,126 @@
+@media print {
+  @page {
+    size: A4;
+    margin: 1.5cm 2cm;
+  }
+
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  body {
+    background: white !important;
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+
+  .dark {
+    --bg: white;
+    --text: black;
+    --text-muted: #333;
+    --border: #ccc;
+  }
+
+  nav,
+  .skip-to-content,
+  #scroll-progress,
+  .scroll-buttons,
+  .print-hide,
+  footer nav[aria-label="Legal links"],
+  [data-hero-cta],
+  .blob-animate,
+  .blob-animate-reverse,
+  .pulse-dot {
+    display: none !important;
+  }
+
+  section {
+    padding-block: 1rem !important;
+    break-inside: avoid;
+  }
+
+  [data-timeline-entry] {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  [data-portfolio-card] {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  section a[href^="http"]::after,
+  section a[href^="https"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #555 !important;
+    word-break: break-all;
+  }
+
+  .btn-primary::after,
+  .btn-outline::after,
+  .btn-icon::after,
+  .skill-pill::after {
+    content: none !important;
+  }
+
+  h1 {
+    font-size: 22pt !important;
+  }
+
+  h2 {
+    font-size: 16pt !important;
+  }
+
+  h3 {
+    font-size: 13pt !important;
+  }
+
+  h4 {
+    font-size: 11pt !important;
+  }
+
+  .gradient-text,
+  .gradient-text-animated {
+    -webkit-text-fill-color: black !important;
+    background: none !important;
+  }
+
+  .card {
+    border: 1px solid #ddd !important;
+  }
+
+  .skill-pill {
+    border: 1px solid #ccc !important;
+    background: transparent !important;
+    color: black !important;
+  }
+
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  footer {
+    border-top: 1px solid #ccc !important;
+    padding: 0.5rem 0 !important;
+  }
+
+  [data-hero-section] {
+    min-height: auto !important;
+    padding-top: 0 !important;
+    padding-bottom: 1rem !important;
+  }
+}

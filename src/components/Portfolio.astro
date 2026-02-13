@@ -1,0 +1,60 @@
+---
+import { cvData } from '../data/cv-data';
+import { getLangFromUrl, useTranslations, resolve } from '../i18n/utils';
+
+interface Props {
+  bgAlt?: boolean;
+}
+const { bgAlt } = Astro.props;
+
+if (!(cvData.projects as readonly unknown[]).length) return;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+<section id="portfolio" class={`px-6 ${bgAlt ? 'bg-section-alt' : ''}`}
+         style="padding-block: var(--space-section);">
+  <div class="mx-auto max-w-4xl">
+    <h2 data-animate="fade-up" class="font-bold text-center mb-12"
+        style={`font-size: var(--heading-2); line-height: var(--leading-tight); color: var(--text);`}>
+      {t('projects.heading')}
+    </h2>
+    <div data-portfolio-grid
+         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {cvData.projects.map((project) => (
+        <div data-portfolio-card class="card card-hover-scale p-6 flex flex-col">
+          {project.url ? (
+            <a href={project.url} target="_blank" rel="noopener noreferrer"
+               class="font-semibold inline-flex items-center gap-1.5 hover:underline"
+               style={`font-size: var(--heading-4); color: var(--text);`}>
+              {project.name}
+              <svg class="w-4 h-4 flex-shrink-0" aria-hidden="true" fill="none" stroke="currentColor"
+                   stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+              </svg>
+            </a>
+          ) : (
+            <span class="font-semibold"
+                  style={`font-size: var(--heading-4); color: var(--text);`}>
+              {project.name}
+            </span>
+          )}
+
+          <p class="mt-2 flex-1"
+             style={`font-size: var(--text-sm); line-height: var(--leading-relaxed); color: var(--text-muted);`}>
+            {resolve(project.description, lang)}
+          </p>
+
+          {project.techStack && project.techStack.length > 0 && (
+            <div class="flex flex-wrap gap-1.5 mt-3">
+              {project.techStack.map(tech => (
+                <span class="skill-pill" style="font-size: 0.65rem; padding: 0.15rem 0.5rem;">{tech}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,25 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { isBilingual, locales, localeLabels } from '../i18n/config';
+import { getLangFromUrl } from '../i18n/utils';
+
+if (!isBilingual) return;
+
+const lang = getLangFromUrl(Astro.url);
+const targetLocale = locales.find(l => l !== lang) || locales[0];
+
+const pathname = Astro.url.pathname;
+const stripped = pathname
+  .replace(new RegExp(`^/${lang}/`), '/')
+  .replace(new RegExp(`^/${lang}$`), '/');
+const pathWithoutLocale = stripped.replace(/^\//, '');
+const targetUrl = getRelativeLocaleUrl(targetLocale, pathWithoutLocale);
+---
+<a
+  href={targetUrl}
+  class="print-hide btn-icon min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-sm font-semibold"
+  style="color: var(--text-muted);"
+  aria-label={`Switch to ${localeLabels[targetLocale]}`}
+>
+  {localeLabels[targetLocale]}
+</a>

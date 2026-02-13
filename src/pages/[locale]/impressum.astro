@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { cvData } from '../../data/cv-data';
+import { getStaticLocalePaths } from '../../i18n/config';
+import type { Locale } from '../../i18n/config';
+import { useTranslations } from '../../i18n/utils';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+export const getStaticPaths = getStaticLocalePaths;
+
+const lang = (Astro.params.locale as Locale) || 'en';
+const t = useTranslations(lang);
+const homeHref = getRelativeLocaleUrl(lang, '');
+const isGerman = lang === 'de';
+---
+<BaseLayout title={`${t('legal.imprint')} — ${cvData.personal.name}`} description={isGerman ? 'Impressum und rechtliche Angaben gemäß § 5 DDG.' : 'Legal information according to § 5 DDG.'} lang={lang}>
+  <section class="px-6" style="padding-top: calc(var(--space-section) + 2rem); padding-bottom: var(--space-section);">
+    <div class="mx-auto max-w-3xl">
+      <a href={homeHref} class="inline-flex items-center gap-1 text-sm mb-8 min-h-[44px] transition-colors hover:text-[var(--accent)]" style="color: var(--text-muted);" aria-label={t('a11y.goHome')}>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 19l-7-7 7-7"/></svg>
+        {t('legal.back')}
+      </a>
+      <h1 class="text-3xl font-bold tracking-tight mb-10 accent-line" data-animate="fade-up" style="color: var(--text);">{t('legal.imprint')}</h1>
+
+      <div class="space-y-8 text-sm leading-relaxed" data-animate="fade-up" data-animate-delay="0.1" style="color: var(--text-muted);">
+        {isGerman ? (
+          <Fragment>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Angaben gemäß § 5 DDG</h2>
+              <p>Alex Johnson<br />Full-Stack Developer<br />Musterstraße 1<br />80331 Munich</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Kontakt</h2>
+              <p>Telefon: <a href="#" class="obf-phone hover:underline"><span>Telefon</span></a><br />E-Mail: <a href="#" class="obf-email hover:underline"><span>E-Mail</span></a></p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">EU-Streitschlichtung</h2>
+              <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:<br />
+              <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer">https://ec.europa.eu/consumers/odr/</a></p>
+              <p class="mt-2">Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Haftung für Inhalte</h2>
+              <p>Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.</p>
+              <p class="mt-2">Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Haftung für Links</h2>
+              <p>Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.</p>
+              <p class="mt-2">Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Urheberrecht</h2>
+              <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet.</p>
+              <p class="mt-2">Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.</p>
+            </div>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Information according to § 5 DDG (German Digital Services Act)</h2>
+              <p>Alex Johnson<br />Full-Stack Developer<br />Musterstraße 1<br />80331 Munich</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Contact</h2>
+              <p>Phone: <a href="#" class="obf-phone hover:underline"><span>Phone</span></a><br />Email: <a href="#" class="obf-email hover:underline"><span>Email</span></a></p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">EU Dispute Resolution</h2>
+              <p>The European Commission provides a platform for online dispute resolution (ODR):<br />
+              <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer">https://ec.europa.eu/consumers/odr/</a></p>
+              <p class="mt-2">We are not willing or obliged to participate in dispute resolution proceedings before a consumer arbitration board.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Liability for Content</h2>
+              <p>As a service provider, we are responsible for our own content on these pages according to § 7 (1) DDG and general laws. According to §§ 8 to 10 DDG, we are not obligated to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity.</p>
+              <p class="mt-2">Obligations to remove or block the use of information under general laws remain unaffected. Liability in this regard is only possible from the point in time at which a concrete infringement of the law becomes known. If we become aware of any such infringements, we will remove this content immediately.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Liability for Links</h2>
+              <p>Our website contains links to external websites of third parties whose content is beyond our control. Therefore, we cannot accept any liability for this third-party content. The respective provider or operator of the pages is always responsible for the content of the linked pages.</p>
+              <p class="mt-2">Permanent monitoring of the content of linked pages is not reasonable without concrete evidence of a violation of law. If we become aware of any infringements, we will remove such links immediately.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Copyright</h2>
+              <p>The content and works created by the site operators on these pages are subject to German copyright law. Duplication, processing, distribution, or any form of commercialization of such material beyond the scope of copyright law requires the prior written consent of its respective author or creator. Downloads and copies of this site are only permitted for private, non-commercial use.</p>
+              <p class="mt-2">Insofar as the content on this site was not created by the operator, the copyrights of third parties are respected. In particular, third-party content is identified as such. Should you nevertheless become aware of a copyright infringement, please inform us accordingly. If we become aware of any infringements, we will remove such content immediately.</p>
+            </div>
+          </Fragment>
+        )}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { cvData } from '../data/cv-data';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const homeHref = getRelativeLocaleUrl(lang, '');
+const isGerman = lang === 'de';
+---
+<BaseLayout title={`${t('legal.privacy')} — ${cvData.personal.name}`} description={isGerman ? 'Datenschutzerklärung gemäß DSGVO.' : 'Privacy policy in accordance with GDPR.'} lang={lang}>
+  <section class="px-6" style="padding-top: calc(var(--space-section) + 2rem); padding-bottom: var(--space-section);">
+    <div class="mx-auto max-w-3xl">
+      <a href={homeHref} class="inline-flex items-center gap-1 text-sm mb-8 min-h-[44px] transition-colors hover:text-[var(--accent)]" style="color: var(--text-muted);" aria-label={t('a11y.goHome')}>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 19l-7-7 7-7"/></svg>
+        {t('legal.back')}
+      </a>
+      <h1 class="text-3xl font-bold tracking-tight mb-10 accent-line" data-animate="fade-up" style="color: var(--text);">{t('legal.privacy')}</h1>
+
+      <div class="space-y-8 text-sm leading-relaxed" data-animate="fade-up" data-animate-delay="0.1" style="color: var(--text-muted);">
+        {isGerman ? (
+          <Fragment>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">1. Verantwortlicher</h2>
+              <p>Alex Johnson<br />Musterstraße 1<br />80331 Munich<br />E-Mail: <a href="#" class="obf-email hover:underline"><span>E-Mail</span></a><br />Telefon: <a href="#" class="obf-phone hover:underline"><span>Telefon</span></a></p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">2. Allgemeines zur Datenverarbeitung</h2>
+              <p>Wir nehmen den Schutz Ihrer persönlichen Daten ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend der Datenschutz-Grundverordnung (DSGVO), des Bundesdatenschutzgesetzes (BDSG) sowie dieser Datenschutzerklärung.</p>
+              <p class="mt-2">Die Nutzung unserer Webseite ist grundsätzlich ohne Angabe personenbezogener Daten möglich. Die Datenübertragung im Internet kann Sicherheitslücken aufweisen. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">3. Hosting</h2>
+              <p>Diese Webseite wird auf einem Server der Hetzner Online GmbH, Industriestr. 25, 91710 Gunzenhausen, Deutschland gehostet.</p>
+              <p class="mt-2">Die Erfassung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der sicheren Bereitstellung der Webseite).</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">4. SSL/TLS-Verschlüsselung</h2>
+              <p>Diese Seite nutzt aus Sicherheitsgründen eine SSL/TLS-Verschlüsselung.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">5. Schriftarten</h2>
+              <p>Diese Webseite nutzt die Schriftart "Geist" von Vercel. Die Schriftdateien werden lokal auf unserem eigenen Server gehostet und direkt von dort ausgeliefert. Es findet keine Verbindung zu externen Servern oder CDN-Diensten statt.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">6. Lokale Speicherung (Local Storage)</h2>
+              <p>Diese Webseite speichert Ihre Präferenz für das Farbschema (Hell/Dunkel-Modus) im Local Storage Ihres Browsers.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">7. Cookies</h2>
+              <p>Diese Webseite setzt keine eigenen Cookies.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">8. Webanalyse</h2>
+              <p>Diese Webseite verwendet standardmäßig keine Webanalyse-Tools.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">9. Ihre Rechte</h2>
+              <p>Sie haben gegenüber dem Verantwortlichen folgende Rechte hinsichtlich Ihrer personenbezogenen Daten:</p>
+              <ul class="list-disc pl-5 mt-2 space-y-1">
+                <li><strong>Auskunftsrecht</strong> (Art. 15 DSGVO)</li>
+                <li><strong>Recht auf Berichtigung</strong> (Art. 16 DSGVO)</li>
+                <li><strong>Recht auf Löschung</strong> (Art. 17 DSGVO)</li>
+                <li><strong>Recht auf Einschränkung der Verarbeitung</strong> (Art. 18 DSGVO)</li>
+                <li><strong>Recht auf Datenübertragbarkeit</strong> (Art. 20 DSGVO)</li>
+                <li><strong>Widerspruchsrecht</strong> (Art. 21 DSGVO)</li>
+              </ul>
+              <p class="mt-2">Zur Ausübung Ihrer Rechte wenden Sie sich an die im Impressum angegebene Adresse.</p>
+            </div>
+            <div>
+              <p class="text-xs" style="color: var(--text-muted);">Stand: Februar 2026</p>
+            </div>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">1. Controller</h2>
+              <p>Alex Johnson<br />Musterstraße 1<br />80331 Munich<br />Email: <a href="#" class="obf-email hover:underline"><span>Email</span></a><br />Phone: <a href="#" class="obf-phone hover:underline"><span>Phone</span></a></p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">2. General Information</h2>
+              <p>We take the protection of your personal data seriously. We treat your personal data confidentially and in accordance with the General Data Protection Regulation (GDPR), the German Federal Data Protection Act (BDSG), and this privacy policy.</p>
+              <p class="mt-2">The use of our website is generally possible without providing personal data.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">3. Hosting</h2>
+              <p>This website is hosted on a server by Hetzner Online GmbH, Industriestr. 25, 91710 Gunzenhausen, Germany.</p>
+              <p class="mt-2">Collection is based on Art. 6 (1) lit. f GDPR (legitimate interest in the secure provision of the website).</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">4. SSL/TLS Encryption</h2>
+              <p>This site uses SSL/TLS encryption for security reasons.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">5. Fonts</h2>
+              <p>This website uses the "Geist" font by Vercel. The font files are hosted locally on our own server. No connection to external servers is made.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">6. Local Storage</h2>
+              <p>This website stores your color scheme preference (light/dark mode) in your browser's local storage.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">7. Cookies</h2>
+              <p>This website does not set any first-party cookies.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">8. Web Analytics</h2>
+              <p>This website does not use any web analytics tools by default.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">9. Your Rights</h2>
+              <p>You have the following rights regarding your personal data:</p>
+              <ul class="list-disc pl-5 mt-2 space-y-1">
+                <li><strong>Right of access</strong> (Art. 15 GDPR)</li>
+                <li><strong>Right to rectification</strong> (Art. 16 GDPR)</li>
+                <li><strong>Right to erasure</strong> (Art. 17 GDPR)</li>
+                <li><strong>Right to restriction of processing</strong> (Art. 18 GDPR)</li>
+                <li><strong>Right to data portability</strong> (Art. 20 GDPR)</li>
+                <li><strong>Right to object</strong> (Art. 21 GDPR)</li>
+              </ul>
+              <p class="mt-2">To exercise your rights, contact us at the address provided in the imprint.</p>
+            </div>
+            <div>
+              <p class="text-xs" style="color: var(--text-muted);">Last updated: February 2026</p>
+            </div>
+          </Fragment>
+        )}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

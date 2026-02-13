@@ -1,0 +1,241 @@
+---
+import '../styles/global.css';
+import { getAbsoluteLocaleUrl, getRelativeLocaleUrl } from 'astro:i18n';
+import { cvData } from '../data/cv-data';
+import { getLangFromUrl, useTranslations, resolve } from '../i18n/utils';
+import { isBilingual, locales, defaultLocale } from '../i18n/config';
+import type { Locale } from '../i18n/config';
+import Nav from '../components/Nav.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+  lang?: Locale;
+}
+
+const { title: customTitle, description: customDescription, noindex, lang: propLang } = Astro.props;
+
+const lang = propLang || getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const accentColor = cvData.site.accentColor;
+const darkDefault = cvData.site.darkModeDefault;
+
+const pathname = Astro.url.pathname;
+const siteBase = Astro.site?.href.replace(/\/$/, '') || cvData.site.url;
+
+const siteDescription = resolve(cvData.site.description, lang);
+const personalTitle = resolve(cvData.personal.title, lang);
+
+const pageTitle = customTitle || `${cvData.personal.name} — ${personalTitle}`;
+const pageDescription = customDescription || siteDescription;
+const canonicalUrl = new URL(pathname, Astro.site).href;
+
+const ogLocale = lang === 'de' ? 'de_DE' : 'en_US';
+const dateLocale = lang === 'de' ? 'de-DE' : 'en-US';
+
+const strippedPath = pathname
+  .replace(/^\/(en|de)\//, '/')
+  .replace(/^\/(en|de)$/, '/')
+  .replace(/^\//, '');
+
+const impressumHref = getRelativeLocaleUrl(lang, 'impressum');
+const datenschutzHref = getRelativeLocaleUrl(lang, 'datenschutz');
+---
+<!DOCTYPE html>
+<html lang={lang} class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content={pageDescription} />
+  <meta name="author" content={cvData.personal.name} />
+  {noindex && <meta name="robots" content="noindex, nofollow" />}
+  <title>{pageTitle}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content={cvData.site.accentColor} />
+  <link rel="canonical" href={canonicalUrl} />
+
+  {isBilingual && locales.map(locale => (
+    <link rel="alternate" hreflang={locale} href={getAbsoluteLocaleUrl(locale, strippedPath)} />
+  ))}
+  {isBilingual && (
+    <link rel="alternate" hreflang="x-default" href={getAbsoluteLocaleUrl(defaultLocale, strippedPath)} />
+  )}
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={pageDescription} />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:locale" content={ogLocale} />
+  <meta property="og:site_name" content={cvData.personal.name} />
+  <meta property="og:image" content={`${siteBase}/og-image.jpg`} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content={`${cvData.personal.name} — ${personalTitle}`} />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={pageDescription} />
+  <meta name="twitter:image" content={`${siteBase}/og-image.jpg`} />
+
+  <link rel="preload" href="/fonts/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/Geist-Bold.woff2" as="font" type="font/woff2" crossorigin />
+
+  <style set:html={`
+    :root {
+      --accent: ${accentColor};
+      --accent-secondary: color-mix(in oklch, ${accentColor}, mediumpurple 35%);
+      --accent-glow: color-mix(in srgb, ${accentColor} 15%, transparent);
+    }
+    .dark {
+      --accent: color-mix(in oklch, ${accentColor}, white 30%);
+      --accent-secondary: color-mix(in oklch, ${accentColor}, mediumpurple 40%);
+      --accent-glow: color-mix(in srgb, ${accentColor} 12%, transparent);
+    }
+  `} />
+
+  <script set:html={`
+    (function() {
+      var theme = localStorage.getItem('theme');
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else if (theme === 'light') {
+        // explicit light choice
+      } else if (${darkDefault} || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  `} />
+  <noscript><style>[data-animate] { opacity: 1 !important; transform: none !important; }</style></noscript>
+  <script type="speculationrules">
+  {
+    "prerender": [
+      {
+        "where": { "href_matches": ["/impressum", "/datenschutz", "/en/impressum", "/en/datenschutz", "/de/impressum", "/de/datenschutz"] },
+        "eagerness": "moderate"
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="min-h-screen antialiased">
+  <div id="scroll-progress" class="fixed top-0 left-0 h-[3px] z-[9999] pointer-events-none" style="background: linear-gradient(90deg, var(--accent), var(--accent-secondary)); width: 0%; transition: width 50ms linear;" aria-hidden="true"></div>
+  <a href="#main-content" class="skip-to-content">{t('a11y.skipToContent')}</a>
+  <header>
+    <Nav />
+  </header>
+  <main id="main-content" tabindex="-1">
+    <slot />
+  </main>
+  <footer class="border-t py-12 text-center text-sm" style={`border-color: var(--border); color: var(--text-muted);`}>
+    <p class="mb-1">{t('footer.madeWith')}</p>
+    <p>&copy; {new Date().getFullYear()} {cvData.personal.name}. {t('footer.allRights')}</p>
+    <p class="mt-1 text-xs opacity-60">{t('footer.lastUpdated')} {new Date().toLocaleDateString(dateLocale, { month: 'long', year: 'numeric' })}</p>
+    <nav class="mt-3 flex justify-center gap-1 flex-wrap" aria-label="Legal links">
+      <a href={impressumHref} class="link-animated px-3 py-2 min-h-[44px] flex items-center rounded-lg">{t('footer.imprint')}</a>
+      <span class="py-2 flex items-center" style="color: var(--border);" aria-hidden="true">|</span>
+      <a href={datenschutzHref} class="link-animated px-3 py-2 min-h-[44px] flex items-center rounded-lg">{t('footer.privacy')}</a>
+    </nav>
+  </footer>
+
+  <div class="scroll-buttons">
+    <button id="scroll-next" class="scroll-btn btn-icon" aria-label={t('a11y.nextSection')}>
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+    <button id="scroll-top" class="scroll-btn btn-icon" aria-label={t('a11y.scrollToTop')}>
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M5 15l7-7 7 7" />
+      </svg>
+    </button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      var p = ['alex', 'example', 'com'];
+      var e = p[0] + String.fromCharCode(64) + p[1] + '.' + p[2];
+      document.querySelectorAll('.obf-email').forEach(function(el) {
+        var s = el.querySelector('span');
+        if (s) s.textContent = e;
+        (el as HTMLAnchorElement).href = 'mailto:' + e;
+      });
+      var t = ['+1', '555', '0100'];
+      document.querySelectorAll('.obf-phone').forEach(function(el) {
+        var s = el.querySelector('span');
+        if (s) s.textContent = t.join(' ');
+        (el as HTMLAnchorElement).href = 'tel:' + t.join('');
+      });
+
+      const themeToggle = document.getElementById('theme-toggle');
+      if (themeToggle) {
+        const labelDark = themeToggle.getAttribute('data-label-dark') || 'Switch to dark mode';
+        const labelLight = themeToggle.getAttribute('data-label-light') || 'Switch to light mode';
+        const isDark = document.documentElement.classList.contains('dark');
+        themeToggle.setAttribute('aria-label', isDark ? labelLight : labelDark);
+        themeToggle.addEventListener('click', function() {
+          document.body.classList.add('theme-transition');
+          document.documentElement.classList.toggle('dark');
+          const nowDark = document.documentElement.classList.contains('dark');
+          localStorage.setItem('theme', nowDark ? 'dark' : 'light');
+          themeToggle.setAttribute('aria-label', nowDark ? labelLight : labelDark);
+          setTimeout(() => document.body.classList.remove('theme-transition'), 500);
+        });
+      }
+
+      const scrollTop = document.getElementById('scroll-top');
+      const scrollNext = document.getElementById('scroll-next');
+      const scrollProgress = document.getElementById('scroll-progress');
+      const allSections = Array.from(document.querySelectorAll('section[id]'));
+
+      let ticking = false;
+      const handleScroll = () => {
+        const y = window.scrollY;
+        if (scrollTop) scrollTop.classList.toggle('visible', y > 300);
+        if (scrollProgress) {
+          const h = document.documentElement.scrollHeight - window.innerHeight;
+          scrollProgress.style.width = h > 0 ? (y / h * 100) + '%' : '0%';
+        }
+        if (scrollNext && allSections.length) {
+          const last = allSections[allSections.length - 1];
+          const atBottom = last.getBoundingClientRect().top < window.innerHeight * 0.5;
+          scrollNext.classList.toggle('visible', !atBottom);
+        }
+        ticking = false;
+      };
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(handleScroll);
+          ticking = true;
+        }
+      }, { passive: true });
+      handleScroll();
+
+      if (scrollTop) {
+        scrollTop.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+
+      if (scrollNext) {
+        scrollNext.addEventListener('click', () => {
+          const y = window.scrollY;
+          const offset = 80;
+          for (const sec of allSections) {
+            const top = sec.getBoundingClientRect().top + y - offset;
+            if (top > y + 10) {
+              window.scrollTo({ top, behavior: 'smooth' });
+              return;
+            }
+          }
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

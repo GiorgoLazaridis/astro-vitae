@@ -1,0 +1,13 @@
+# Astro Vitae
+> Professional CV/Resume Template built with Astro and Tailwind CSS
+
+## About
+Astro Vitae is an open-source, single-page CV template. Edit one file (src/data/cv-data.ts) to customize all content. Features dark mode, bilingual support, print optimization, and perfect Lighthouse scores.
+
+## Tech Stack
+- Astro
+- Tailwind CSS
+- TypeScript
+
+## Source
+https://github.com/GiorgoLazaridis/astro-vitae

@@ -1,0 +1,27 @@
+---
+import { cvData } from '../data/cv-data';
+import { getLangFromUrl, useTranslations, resolve } from '../i18n/utils';
+
+interface Props {
+  bgAlt?: boolean;
+}
+const { bgAlt } = Astro.props;
+
+if (!(cvData.languages as readonly unknown[]).length) return;
+
+const locale = getLangFromUrl(Astro.url);
+const t = useTranslations(locale);
+---
+<section id="languages" class={`px-6 ${bgAlt ? 'bg-section-alt' : ''}`} style="padding-block: var(--space-section);">
+  <div class="mx-auto max-w-4xl">
+    <h2 data-animate="fade-up" class="font-bold text-center mb-12" style={`font-size: var(--heading-2); line-height: var(--leading-tight); color: var(--text);`}>{t('languages.heading')}</h2>
+    <div data-animate="stagger" class="flex flex-wrap justify-center gap-6">
+      {cvData.languages.map(langEntry => (
+        <div data-animate-child class="card p-6 text-center min-w-[140px]">
+          <p class="font-semibold" style="font-size: var(--heading-4); color: var(--text);">{langEntry.language}</p>
+          <p class="mt-1 text-sm" style="color: var(--accent);">{resolve(langEntry.level, locale)}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,40 @@
+---
+import { cvData } from '../data/cv-data';
+import { getLangFromUrl, useTranslations, resolve } from '../i18n/utils';
+
+interface Props {
+  bgAlt?: boolean;
+}
+const { bgAlt } = Astro.props;
+
+if (!(cvData.skills as readonly unknown[]).length) return;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+<section id="skills" class={`px-6 ${bgAlt ? 'bg-section-alt' : ''}`}
+         style="padding-block: var(--space-section);">
+  <div class="mx-auto max-w-4xl">
+    <h2 data-animate="fade-up" class="font-bold text-center mb-12"
+        style={`font-size: var(--heading-2); line-height: var(--leading-tight); color: var(--text);`}>
+      {t('skills.heading')}
+    </h2>
+    <div data-animate="stagger" class="divide-y" style="border-color: var(--border);">
+      {cvData.skills.map((cat) => (
+        <div data-animate-child
+             class="grid grid-cols-1 sm:grid-cols-[180px_1fr] md:grid-cols-[220px_1fr] gap-x-6 gap-y-2 py-5 first:pt-0 last:pb-0"
+             style="border-color: var(--border);">
+          <p class="font-semibold text-sm tracking-wide"
+             style="color: var(--accent);">
+            {resolve(cat.category, lang)}
+          </p>
+          <div class="flex flex-wrap gap-1.5">
+            {cat.skills.map((skill) => (
+              <span class="skill-pill">{skill}</span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

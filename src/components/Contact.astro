@@ -1,0 +1,82 @@
+---
+import { cvData } from '../data/cv-data';
+import { socialSvgPaths } from '../data/social-icons';
+import { getLangFromUrl, useTranslations, resolve } from '../i18n/utils';
+
+interface Props {
+  bgAlt?: boolean;
+}
+const { bgAlt } = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const { email, phone, location, website, socials } = cvData.personal;
+const hasContactInfo = email || phone || location || website || (socials as readonly unknown[]).length > 0;
+if (!hasContactInfo) return;
+
+const heading = resolve(cvData.contact.heading, lang);
+const text = resolve(cvData.contact.text, lang);
+---
+<section id="contact" class={`px-6 ${bgAlt ? 'bg-section-alt' : ''}`}
+         style="padding-block: var(--space-section);">
+  <div class="mx-auto max-w-4xl">
+    <h2 data-animate="fade-up" class="font-bold text-center mb-12"
+        style="font-size: var(--heading-2); line-height: var(--leading-tight); color: var(--text);">
+      {heading}
+    </h2>
+
+    <div class="max-w-xl mx-auto text-center" data-animate="fade-up">
+      <p class="text-base leading-relaxed mb-8" style="color: var(--text-muted);">
+        {text}
+      </p>
+
+      <div class="flex flex-wrap gap-4 justify-center mb-8">
+        <a href="mailto:contact" class="obf-email btn-primary inline-flex items-center gap-2 text-sm px-6 py-3 rounded-xl font-medium text-white" style={`background: linear-gradient(135deg, var(--accent), var(--accent-secondary));`} aria-label={t('a11y.sendEmail')}>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <span>{t('hero.email')}</span>
+        </a>
+        {phone && (
+          <a href="tel:0" class="obf-phone btn-outline inline-flex items-center gap-2 text-sm px-6 py-3 rounded-xl font-medium border" style={`border-color: var(--border); color: var(--text);`} aria-label={t('a11y.call')}>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            <span>{t('hero.phone')}</span>
+          </a>
+        )}
+      </div>
+
+      {(location || website) && (
+        <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mb-8" style="color: var(--text-muted); font-size: var(--text-sm);">
+          {location && (
+            <span class="inline-flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              {location}
+            </span>
+          )}
+          {website && (
+            <a href={website.startsWith('http') ? website : `https://${website}`} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 hover:underline" style="color: var(--accent);">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+              {website}
+            </a>
+          )}
+        </div>
+      )}
+
+      {(socials as readonly unknown[]).length > 0 && (
+        <div class="flex justify-center gap-1.5 sm:gap-3 flex-wrap">
+          {cvData.personal.socials.map(social => (
+            <a href={social.url} target="_blank" rel="noopener noreferrer"
+               class="btn-icon min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg"
+               aria-label={social.platform.charAt(0).toUpperCase() + social.platform.slice(1)}
+               title={social.platform.charAt(0).toUpperCase() + social.platform.slice(1)}>
+              {socialSvgPaths[social.platform] ? (
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d={socialSvgPaths[social.platform]} /></svg>
+              ) : (
+                <span class="text-xs font-bold">{social.platform.charAt(0).toUpperCase()}</span>
+              )}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</section>

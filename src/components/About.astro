@@ -1,0 +1,22 @@
+---
+import { cvData } from '../data/cv-data';
+import { getLangFromUrl, resolve } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const heading = resolve(cvData.about.heading, lang);
+const text = resolve(cvData.about.text, lang);
+
+if (!text.trim()) return;
+
+const paragraphs = text.split('\n\n');
+---
+<section id="about" class="px-6" style="padding-block: var(--space-section);">
+  <div class="mx-auto max-w-3xl" data-about-reveal>
+    <h2 class="font-bold mb-8 accent-line" data-animate="fade-up" style={`font-size: var(--heading-2); line-height: var(--leading-tight); color: var(--text);`}>{heading}</h2>
+    <div class="space-y-6" style={`font-size: var(--text-body-lg); line-height: var(--leading-relaxed); color: var(--text-muted);`}>
+      {paragraphs.map(p => (
+        <p set:html={p} />
+      ))}
+    </div>
+  </div>
+</section>
