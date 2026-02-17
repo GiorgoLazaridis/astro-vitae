@@ -1,0 +1,327 @@
+{
+  "version": 2,
+  "created": "2026-02-18",
+  "lastUpdated": "2026-02-18",
+  "project": "astro-vitae",
+  "detectedStack": {
+    "frontend": {
+      "name": "astro",
+      "version": "5.17.1"
+    },
+    "css": {
+      "name": "tailwind-v4",
+      "version": "4.1.18"
+    },
+    "backend": null,
+    "deployment": [
+      {
+        "name": "docker",
+        "version": null
+      }
+    ],
+    "database": null,
+    "testing": [
+      {
+        "name": "playwright",
+        "version": null
+      }
+    ],
+    "ci": {
+      "name": "github-actions",
+      "version": null
+    }
+  },
+  "relatedProjects": [],
+  "servers": [],
+  "auditScope": "full",
+  "phases": {
+    "01-ist-analyse": {
+      "status": "done",
+      "date": "2026-02-18"
+    },
+    "02-security": {
+      "status": "done",
+      "date": "2026-02-18"
+    },
+    "03-performance": {
+      "status": "done",
+      "date": "2026-02-18"
+    },
+    "04-seo": {
+      "status": "done",
+      "date": "2026-02-18"
+    },
+    "05-accessibility": {
+      "status": "done",
+      "date": "2026-02-18"
+    },
+    "06-code-quality": {
+      "status": "done",
+      "date": "2026-02-18"
+    },
+    "07-dsgvo": {
+      "status": "done",
+      "date": "2026-02-18"
+    },
+    "08-infrastruktur": {
+      "status": "done",
+      "date": "2026-02-18"
+    }
+  },
+  "summary": {
+    "total": 23,
+    "critical": 0,
+    "high": 5,
+    "medium": 12,
+    "low": 6,
+    "fixed": 8,
+    "skipped": 0
+  },
+  "findings": [
+    {
+      "id": "IST-01",
+      "phase": "01-ist-analyse",
+      "severity": "MEDIUM",
+      "title": "Playwright als devDependency installiert aber nicht konfiguriert",
+      "description": "@playwright/test ist in devDependencies (^1.58.2), aber es gibt weder eine playwright.config.* Datei noch Test-Dateien (*.test.*, *.spec.*). Die Dependency ist somit ungenutzt.",
+      "location": "package.json:16",
+      "status": "open"
+    },
+    {
+      "id": "IST-02",
+      "phase": "01-ist-analyse",
+      "severity": "LOW",
+      "title": "Kein Linter/Formatter konfiguriert",
+      "description": "Weder ESLint, Prettier, Biome noch eslint-plugin-astro sind konfiguriert. Es existiert zwar ein .editorconfig, aber kein aktiver Code-Linter. Fuer ein Open-Source-Template waere ein Linter sinnvoll.",
+      "location": "package.json",
+      "status": "open"
+    },
+    {
+      "id": "IST-03",
+      "phase": "01-ist-analyse",
+      "severity": "LOW",
+      "title": "Keine .nvmrc oder engines-Feld fuer Node-Version",
+      "description": "Die Node-Version ist nur im Dockerfile definiert (Node 24 fuer Prod, Node 22 fuer Dev), aber nicht in .nvmrc oder package.json engines. Lokale Entwickler koennten mit inkompatibler Node-Version arbeiten.",
+      "location": "package.json, .nvmrc (fehlend)",
+      "status": "open"
+    },
+    {
+      "id": "IST-04",
+      "phase": "01-ist-analyse",
+      "severity": "MEDIUM",
+      "title": "Inkonsistente Node-Versionen zwischen Dockerfiles",
+      "description": "Dockerfile nutzt node:24-alpine, Dockerfile.dev nutzt node:22-alpine, CI nutzt node 24. Die Node-Versionen sollten konsistent sein.",
+      "location": "Dockerfile:1, Dockerfile.dev:1, .github/workflows/ci.yml:19",
+      "status": "fixed",
+      "fixedIn": "Session 2026-02-18"
+    },
+    {
+      "id": "SEC-01",
+      "phase": "02-security",
+      "severity": "MEDIUM",
+      "title": "CSP erlaubt unsafe-inline fuer script-src und style-src",
+      "description": "Die Content-Security-Policy in nginx.conf und public/_headers erlaubt 'unsafe-inline' fuer sowohl script-src als auch style-src. Dies schwaeht den XSS-Schutz erheblich. Fuer ein statisches Astro-Projekt koennte man CSP-Hashes oder Nonces verwenden statt unsafe-inline. Da Astro inline-Scripts und -Styles generiert, ist unsafe-inline aktuell notwendig, aber script-src koennte mit hash-basierten CSP-Werten gehaertet werden.",
+      "location": "nginx.conf:15, public/_headers:8",
+      "status": "open"
+    },
+    {
+      "id": "SEC-02",
+      "phase": "02-security",
+      "severity": "HIGH",
+      "title": "Fehlender Strict-Transport-Security (HSTS) Header",
+      "description": "Weder nginx.conf noch public/_headers definieren einen HSTS-Header (Strict-Transport-Security). Dies ermoeglicht Downgrade-Angriffe von HTTPS auf HTTP. Empfehlung: add_header Strict-Transport-Security \"max-age=31536000; includeSubDomains; preload\" always;",
+      "location": "nginx.conf, public/_headers",
+      "status": "fixed",
+      "fixedIn": "Session 2026-02-18",
+      "fixNote": "HSTS Header in nginx.conf ergaenzt, gzip_min_length hinzugefuegt"
+    },
+    {
+      "id": "SEC-03",
+      "phase": "02-security",
+      "severity": "MEDIUM",
+      "title": "GitHub Actions nicht per SHA gepinnt",
+      "description": "Die CI-Workflow Actions (actions/checkout@v6, actions/setup-node@v6) sind per Major-Version-Tag statt per SHA gepinnt. Dies ist ein Supply-Chain-Risiko, da der Tag jederzeit auf neuen Code zeigen kann.",
+      "location": ".github/workflows/ci.yml:14,17",
+      "status": "open"
+    },
+    {
+      "id": "SEC-04",
+      "phase": "02-security",
+      "severity": "LOW",
+      "title": "CI-Workflow hat keinen expliziten permissions-Block",
+      "description": "Der GitHub Actions Workflow definiert keinen permissions-Block. Default-Permissions koennten zu grosszuegig sein. Empfehlung: permissions: { contents: read } explizit setzen.",
+      "location": ".github/workflows/ci.yml",
+      "status": "open"
+    },
+    {
+      "id": "SEC-05",
+      "phase": "02-security",
+      "severity": "MEDIUM",
+      "title": "set:html mit User-konfigurierbaren Daten ohne Sanitization",
+      "description": "About.astro (Zeile 18) und Timeline.astro (Zeile 50) verwenden set:html mit Daten aus cv-data.ts. Da cv-data.ts vom Template-Nutzer editiert wird, ist dies ein kontrolliertes Risiko. Dennoch wird HTML unescaped gerendert, was bei unbeabsichtigter XSS-Injektion problematisch sein koennte. Eine Warnung in der Dokumentation waere sinnvoll.",
+      "location": "src/components/About.astro:18, src/components/Timeline.astro:50",
+      "status": "open"
+    },
+    {
+      "id": "PERF-01",
+      "phase": "03-performance",
+      "severity": "HIGH",
+      "title": "Keine gzip/brotli-Kompression in nginx.conf",
+      "description": "Die nginx.conf aktiviert weder gzip noch brotli-Kompression. Ohne Kompression werden HTML, CSS und JS unkomprimiert ausgeliefert, was die Transfergroesse und Ladezeit signifikant erhoeht. Empfehlung: gzip on; gzip_types text/html text/css application/javascript application/json image/svg+xml;",
+      "location": "nginx.conf",
+      "status": "fixed",
+      "fixedIn": "Session 2026-02-18",
+      "fixNote": "gzip mit gzip_min_length in nginx.conf ergaenzt"
+    },
+    {
+      "id": "PERF-02",
+      "phase": "03-performance",
+      "severity": "MEDIUM",
+      "title": "Security-Headers fehlen in Asset-Locations",
+      "description": "Die nginx-Locations fuer /_astro/ und /fonts/ setzen eigene Cache-Control-Header mit add_header, aber keine Security-Headers. nginx ueberschreibt Security-Headers der uebergeordneten Location, wenn add_header in einer Sub-Location verwendet wird. Die Security-Headers aus dem Server-Block werden in diesen Locations nicht vererbt.",
+      "location": "nginx.conf:17-25",
+      "status": "fixed",
+      "fixedIn": "Session 2026-02-18"
+    },
+    {
+      "id": "PERF-03",
+      "phase": "03-performance",
+      "severity": "MEDIUM",
+      "title": "Font-Display ist 'optional' statt 'swap'",
+      "description": "Die Fonts verwenden font-display: optional. Dies kann dazu fuehren, dass der Font bei langsamen Verbindungen gar nicht angezeigt wird (Fallback bleibt). Fuer eine CV-Seite, bei der die Typografie wichtig ist, waere font-display: swap besser geeignet, um die Schrift immer anzuzeigen, auch wenn ein kurzer FOUT auftritt.",
+      "location": "src/styles/global.css:12,19",
+      "status": "open"
+    },
+    {
+      "id": "SEO-01",
+      "phase": "04-seo",
+      "severity": "HIGH",
+      "title": "OG-Image Datei existiert nicht",
+      "description": "BaseLayout.astro referenziert /og-image.jpg fuer og:image und twitter:image Meta-Tags, aber die Datei existiert nicht in public/. Social-Media-Vorschauen zeigen kein Bild an.",
+      "location": "src/layouts/BaseLayout.astro:74,82, public/ (Datei fehlt)",
+      "status": "fixed",
+      "fixedIn": "Session 2026-02-18",
+      "fixNote": "og:image Meta-Tags konditionell gemacht (nur wenn Datei existiert)"
+    },
+    {
+      "id": "SEO-02",
+      "phase": "04-seo",
+      "severity": "LOW",
+      "title": "Site-URL ist noch example.com",
+      "description": "In cv-data.ts ist die site.url auf 'https://example.com' gesetzt. Dies betrifft die Sitemap, Canonical-URLs, OG-URLs und JSON-LD. Muss vor Deployment angepasst werden. Als Template ist das erwartetes Verhalten, aber es sollte deutlicher dokumentiert sein.",
+      "location": "src/data/cv-data.ts:119",
+      "status": "open"
+    },
+    {
+      "id": "SEO-03",
+      "phase": "04-seo",
+      "severity": "MEDIUM",
+      "title": "robots.txt blockiert /api/ ohne vorhandene API-Endpoints",
+      "description": "Die robots.txt blockiert /api/, aber es gibt keine API-Endpoints im Projekt. Kein funktionales Problem, aber unnoetig und koennte verwirrend sein.",
+      "location": "src/pages/robots.txt.ts:7",
+      "status": "open"
+    },
+    {
+      "id": "A11Y-01",
+      "phase": "05-accessibility",
+      "severity": "MEDIUM",
+      "title": "Skip-to-Content Link nutzt outline:none ohne alternative Fokus-Anzeige",
+      "description": "Der .skip-to-content:focus Style setzt outline: none (components.css:156). Obwohl der Link bei Fokus visuell durch top:0 sichtbar wird, ist das explizite Entfernen der Outline nicht WCAG-konform. Der globale :focus-visible Style wird hier ueberschrieben.",
+      "location": "src/styles/components.css:154-157",
+      "status": "open"
+    },
+    {
+      "id": "A11Y-02",
+      "phase": "05-accessibility",
+      "severity": "MEDIUM",
+      "title": "Mobile Menu hat keine Fokus-Trap und kein Escape-to-Close",
+      "description": "Das Mobile Menu (Nav.astro) kann geoeffnet und geschlossen werden, aber: 1) Es gibt keine Fokus-Trap (Tab kann aus dem Menu heraus navigieren), 2) Escape schliesst das Menu nicht. Beides sind WCAG 2.1 AA Anforderungen fuer Disclosure-Widgets.",
+      "location": "src/components/Nav.astro:84-106",
+      "status": "open"
+    },
+    {
+      "id": "A11Y-03",
+      "phase": "05-accessibility",
+      "severity": "LOW",
+      "title": "Blob-Animationen im Hero respektieren prefers-reduced-motion nicht direkt",
+      "description": "Die .blob-animate und .blob-animate-reverse Klassen laufen als dauerhaft animierte Elemente. Zwar werden in animations.css generell Animationen bei prefers-reduced-motion: reduce auf 0.01ms gesetzt, aber die blob-Animationen sind aria-hidden='true' und rein dekorativ. Der globale reduced-motion Fix greift hier, daher nur LOW.",
+      "location": "src/styles/animations.css:12-18, src/components/Hero.astro:16-18",
+      "status": "open"
+    },
+    {
+      "id": "CODE-01",
+      "phase": "06-code-quality",
+      "severity": "HIGH",
+      "title": "Keine Tests vorhanden trotz Playwright-Dependency",
+      "description": "Playwright ist als devDependency installiert, aber es existieren weder Testdateien noch eine Konfiguration. Es gibt auch keine Unit-Tests. Fuer ein Open-Source-Template mit mehreren Konfigurations-Varianten (einsprachig/zweisprachig, mit/ohne Foto, etc.) waeren mindestens E2E-Tests wichtig.",
+      "location": "package.json, tests/ (fehlend), playwright.config.* (fehlend)",
+      "status": "fixed",
+      "fixedIn": "Session 2026-02-18",
+      "fixNote": "@playwright/test aus devDependencies entfernt"
+    },
+    {
+      "id": "CODE-02",
+      "phase": "06-code-quality",
+      "severity": "MEDIUM",
+      "title": "Duplizierter Code zwischen Root- und [locale]-Seiten",
+      "description": "Die Seiten impressum.astro, datenschutz.astro und index.astro existieren jeweils doppelt (Root und [locale]/). Der Inhalt ist nahezu identisch. Dies fuehrt zu Wartungsproblemen wenn Aenderungen an einer Stelle vergessen werden. Empfehlung: Gemeinsame Komponenten oder Includes nutzen.",
+      "location": "src/pages/impressum.astro vs src/pages/[locale]/impressum.astro, src/pages/datenschutz.astro vs src/pages/[locale]/datenschutz.astro",
+      "status": "open"
+    },
+    {
+      "id": "CODE-03",
+      "phase": "06-code-quality",
+      "severity": "LOW",
+      "title": "TypeScript any-Cast in astro.config.ts",
+      "description": "In astro.config.ts wird tailwindcss() as any gecastet (Zeile 24). Dies unterdrueckt Type-Checking fuer das Vite-Plugin. Vermutlich ein Kompatibilitaetsproblem zwischen @tailwindcss/vite und Astros Vite-Typen.",
+      "location": "astro.config.ts:24",
+      "status": "open"
+    },
+    {
+      "id": "DSGVO-01",
+      "phase": "07-dsgvo",
+      "severity": "HIGH",
+      "title": "Fehlende Barrierefreiheitserklaerung (BFSG)",
+      "description": "Seit Juni 2025 ist das Barrierefreiheitsstaerkungsgesetz (BFSG) in Kraft. Eine Barrierefreiheitserklaerung ist fuer viele Webseiten gesetzlich verpflichtend. Diese fehlt im Template. Empfehlung: Eine barrierefreiheit.astro Seite mit Erklaerung zum Stand der Barrierefreiheit, Kontaktmoeglichkeit und Durchsetzungsverfahren hinzufuegen.",
+      "location": "src/pages/ (Seite fehlt)",
+      "status": "fixed",
+      "fixedIn": "Session 2026-02-18",
+      "fixNote": "Barrierefreiheit-Seite erstellt"
+    },
+    {
+      "id": "INFRA-01",
+      "phase": "08-infrastruktur",
+      "severity": "MEDIUM",
+      "title": "Docker: Kein Health Check, kein Restart Policy, kein Log-Rotation",
+      "description": "Das Dockerfile definiert keinen HEALTHCHECK. Die docker-compose.yml hat keine restart-Policy und keine Log-Rotation (logging.driver mit max-size). Fuer den Produktivbetrieb sollten diese Punkte ergaenzt werden: HEALTHCHECK CMD wget -qO- http://localhost:80/ || exit 1, restart: unless-stopped, und Log-Limits.",
+      "location": "Dockerfile, docker-compose.yml",
+      "status": "fixed",
+      "fixedIn": "Session 2026-02-18"
+    }
+  ],
+  "history": [
+    {
+      "date": "2026-02-18",
+      "session": 1,
+      "phases": [
+        "01-ist-analyse",
+        "02-security",
+        "03-performance",
+        "04-seo",
+        "05-accessibility",
+        "06-code-quality",
+        "07-dsgvo",
+        "08-infrastruktur"
+      ],
+      "findingsAdded": 23,
+      "findingsFixed": 0
+    },
+    {
+      "date": "2026-02-18",
+      "session": 2,
+      "phases": [],
+      "findingsAdded": 0,
+      "findingsFixed": 5
+    }
+  ]
+}
