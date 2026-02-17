@@ -1,0 +1,122 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { cvData } from '../data/cv-data';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const homeHref = getRelativeLocaleUrl(lang, '');
+const isGerman = lang === 'de';
+---
+<BaseLayout title={`${t('legal.accessibility')} — ${cvData.personal.name}`} description={isGerman ? 'Barrierefreiheitserklärung nach BFSG.' : 'Accessibility statement according to BFSG.'} lang={lang}>
+  <section class="px-6" style="padding-top: calc(var(--space-section) + 2rem); padding-bottom: var(--space-section);">
+    <div class="mx-auto max-w-3xl">
+      <a href={homeHref} class="inline-flex items-center gap-1 text-sm mb-8 min-h-[44px] transition-colors hover:text-[var(--accent)]" style="color: var(--text-muted);" aria-label={t('a11y.goHome')}>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 19l-7-7 7-7"/></svg>
+        {t('legal.back')}
+      </a>
+      <h1 class="text-3xl font-bold tracking-tight mb-10 accent-line" data-animate="fade-up" style="color: var(--text);">{t('legal.accessibility')}</h1>
+
+      <div class="space-y-8 text-sm leading-relaxed" data-animate="fade-up" data-animate-delay="0.1" style="color: var(--text-muted);">
+        {isGerman ? (
+          <Fragment>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Barrierefreiheitserklärung</h2>
+              <p>Diese Erklärung zur Barrierefreiheit gilt für die Website <strong>{cvData.site.url}</strong>, betrieben von {cvData.personal.name}.</p>
+              <p class="mt-2">Wir sind bemüht, unsere Website im Einklang mit den Anforderungen des Barrierefreiheitsstärkungsgesetzes (BFSG) sowie der Web Content Accessibility Guidelines (WCAG) 2.1 Level AA barrierefrei zugänglich zu machen.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Stand der Konformität</h2>
+              <p>Diese Website ist <strong>teilweise konform</strong> mit WCAG 2.1 Level AA.</p>
+              <p class="mt-2">Die folgenden Maßnahmen wurden umgesetzt:</p>
+              <ul class="list-disc pl-5 mt-2 space-y-1">
+                <li>Semantisches HTML und ARIA-Attribute</li>
+                <li>Tastaturnavigation und Skip-Links</li>
+                <li>Farbkontraste gemäß WCAG AA</li>
+                <li>Responsive Design für verschiedene Endgeräte</li>
+                <li>Self-hosted Schriften ohne externe Abhängigkeiten</li>
+              </ul>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Bekannte Einschränkungen</h2>
+              <p>Trotz unserer Bemühungen können einzelne Inhalte noch nicht vollständig barrierefrei sein. Wir arbeiten kontinuierlich an Verbesserungen.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Kontakt bei Barrieren</h2>
+              <p>Sollten Sie auf Barrieren stoßen oder Verbesserungsvorschläge haben, kontaktieren Sie uns bitte:</p>
+              <p class="mt-2">E-Mail: <a href="#" class="obf-email hover:underline"><span>E-Mail</span></a></p>
+              <p class="mt-1">Wir bemühen uns, Ihre Anfrage innerhalb von 4 Wochen zu beantworten.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Durchsetzungsverfahren</h2>
+              <p>Wenn Sie der Meinung sind, dass unsere Maßnahmen nicht ausreichen, können Sie sich an die zuständige Durchsetzungsstelle wenden. Die Schlichtungsstelle nach § 16 BGG ist angesiedelt beim Beauftragten der Bundesregierung für die Belange von Menschen mit Behinderungen:</p>
+              <p class="mt-2">
+                Schlichtungsstelle nach dem Behindertengleichstellungsgesetz bei dem Beauftragten der Bundesregierung für die Belange von Menschen mit Behinderungen<br />
+                Mauerstraße 53<br />
+                10117 Berlin
+              </p>
+              <p class="mt-2">
+                Telefon: <a href="tel:+4930184001-2039" class="hover:underline">+49 (0)30 18 527-2600</a><br />
+                E-Mail: <a href="mailto:info@schlichtungsstelle-bgg.de" class="hover:underline">info@schlichtungsstelle-bgg.de</a><br />
+                Web: <a href="https://www.schlichtungsstelle-bgg.de" target="_blank" rel="noopener noreferrer" class="hover:underline">www.schlichtungsstelle-bgg.de</a>
+              </p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Erstellung dieser Erklärung</h2>
+              <p>Diese Erklärung wurde am {new Date().toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })} erstellt.</p>
+            </div>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Accessibility Statement</h2>
+              <p>This accessibility statement applies to the website <strong>{cvData.site.url}</strong>, operated by {cvData.personal.name}.</p>
+              <p class="mt-2">We are committed to making our website accessible in accordance with the German Accessibility Strengthening Act (BFSG) and the Web Content Accessibility Guidelines (WCAG) 2.1 Level AA.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Conformance Status</h2>
+              <p>This website is <strong>partially conformant</strong> with WCAG 2.1 Level AA.</p>
+              <p class="mt-2">The following measures have been implemented:</p>
+              <ul class="list-disc pl-5 mt-2 space-y-1">
+                <li>Semantic HTML and ARIA attributes</li>
+                <li>Keyboard navigation and skip links</li>
+                <li>Color contrasts according to WCAG AA</li>
+                <li>Responsive design for various devices</li>
+                <li>Self-hosted fonts without external dependencies</li>
+              </ul>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Known Limitations</h2>
+              <p>Despite our efforts, some content may not yet be fully accessible. We are continuously working on improvements.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Contact for Accessibility Issues</h2>
+              <p>If you encounter barriers or have suggestions for improvement, please contact us:</p>
+              <p class="mt-2">Email: <a href="#" class="obf-email hover:underline"><span>Email</span></a></p>
+              <p class="mt-1">We aim to respond to your inquiry within 4 weeks.</p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Enforcement Procedure</h2>
+              <p>If you believe that our measures are insufficient, you may contact the responsible enforcement body. The arbitration body under § 16 BGG is located at the Federal Government Commissioner for Matters relating to Persons with Disabilities:</p>
+              <p class="mt-2">
+                Schlichtungsstelle nach dem Behindertengleichstellungsgesetz<br />
+                Mauerstraße 53<br />
+                10117 Berlin, Germany
+              </p>
+              <p class="mt-2">
+                Phone: <a href="tel:+4930184001-2039" class="hover:underline">+49 (0)30 18 527-2600</a><br />
+                Email: <a href="mailto:info@schlichtungsstelle-bgg.de" class="hover:underline">info@schlichtungsstelle-bgg.de</a><br />
+                Web: <a href="https://www.schlichtungsstelle-bgg.de" target="_blank" rel="noopener noreferrer" class="hover:underline">www.schlichtungsstelle-bgg.de</a>
+              </p>
+            </div>
+            <div>
+              <h2 class="text-base font-semibold mb-2" style="color: var(--text);">Creation of this Statement</h2>
+              <p>This statement was created on {new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}.</p>
+            </div>
+          </Fragment>
+        )}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

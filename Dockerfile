@@ -15,3 +15,5 @@ RUN chown -R app:app /usr/share/nginx/html && \
     touch /var/run/nginx.pid && chown app:app /var/run/nginx.pid
 USER app
 EXPOSE 80
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 --start-period=5s \
+  CMD wget -qO- http://localhost:80/ || exit 1

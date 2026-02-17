@@ -38,6 +38,8 @@ export const ui = {
     'legal.back': 'Back',
     'legal.imprint': 'Imprint',
     'legal.privacy': 'Privacy Policy',
+    'legal.accessibility': 'Accessibility',
+    'footer.accessibility': 'Accessibility',
   },
   de: {
     'nav.about': 'Über mich',
@@ -78,6 +80,8 @@ export const ui = {
     'legal.back': 'Zurück',
     'legal.imprint': 'Impressum',
     'legal.privacy': 'Datenschutz',
+    'legal.accessibility': 'Barrierefreiheit',
+    'footer.accessibility': 'Barrierefreiheit',
   },
 } as const;
 

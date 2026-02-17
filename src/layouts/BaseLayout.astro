@@ -10,11 +10,12 @@ import Nav from '../components/Nav.astro';
 interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
   noindex?: boolean;
   lang?: Locale;
 }
 
-const { title: customTitle, description: customDescription, noindex, lang: propLang } = Astro.props;
+const { title: customTitle, description: customDescription, ogImage, noindex, lang: propLang } = Astro.props;
 
 const lang = propLang || getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -42,6 +43,7 @@ const strippedPath = pathname
 
 const impressumHref = getRelativeLocaleUrl(lang, 'impressum');
 const datenschutzHref = getRelativeLocaleUrl(lang, 'datenschutz');
+const barrierefreiheitHref = getRelativeLocaleUrl(lang, 'barrierefreiheit');
 ---
 <!DOCTYPE html>
 <html lang={lang} class="scroll-smooth">
@@ -71,15 +73,15 @@ const datenschutzHref = getRelativeLocaleUrl(lang, 'datenschutz');
   <meta property="og:url" content={canonicalUrl} />
   <meta property="og:locale" content={ogLocale} />
   <meta property="og:site_name" content={cvData.personal.name} />
-  <meta property="og:image" content={`${siteBase}/og-image.jpg`} />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content={`${cvData.personal.name} — ${personalTitle}`} />
+  {ogImage && <meta property="og:image" content={`${siteBase}${ogImage}`} />}
+  {ogImage && <meta property="og:image:width" content="1200" />}
+  {ogImage && <meta property="og:image:height" content="630" />}
+  {ogImage && <meta property="og:image:alt" content={`${cvData.personal.name} — ${personalTitle}`} />}
 
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
   <meta name="twitter:title" content={pageTitle} />
   <meta name="twitter:description" content={pageDescription} />
-  <meta name="twitter:image" content={`${siteBase}/og-image.jpg`} />
+  {ogImage && <meta name="twitter:image" content={`${siteBase}${ogImage}`} />}
 
   <link rel="preload" href="/fonts/Geist-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/Geist-Bold.woff2" as="font" type="font/woff2" crossorigin />
@@ -114,7 +116,7 @@ const datenschutzHref = getRelativeLocaleUrl(lang, 'datenschutz');
   {
     "prerender": [
       {
-        "where": { "href_matches": ["/impressum", "/datenschutz", "/en/impressum", "/en/datenschutz", "/de/impressum", "/de/datenschutz"] },
+        "where": { "href_matches": ["/impressum", "/datenschutz", "/barrierefreiheit", "/en/impressum", "/en/datenschutz", "/en/barrierefreiheit", "/de/impressum", "/de/datenschutz", "/de/barrierefreiheit"] },
         "eagerness": "moderate"
       }
     ]
@@ -138,6 +140,8 @@ const datenschutzHref = getRelativeLocaleUrl(lang, 'datenschutz');
       <a href={impressumHref} class="link-animated px-3 py-2 min-h-[44px] flex items-center rounded-lg">{t('footer.imprint')}</a>
       <span class="py-2 flex items-center" style="color: var(--border);" aria-hidden="true">|</span>
       <a href={datenschutzHref} class="link-animated px-3 py-2 min-h-[44px] flex items-center rounded-lg">{t('footer.privacy')}</a>
+      <span class="py-2 flex items-center" style="color: var(--border);" aria-hidden="true">|</span>
+      <a href={barrierefreiheitHref} class="link-animated px-3 py-2 min-h-[44px] flex items-center rounded-lg">{t('footer.accessibility')}</a>
     </nav>
   </footer>
 
