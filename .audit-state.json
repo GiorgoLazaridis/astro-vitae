@@ -74,7 +74,7 @@
     "high": 5,
     "medium": 12,
     "low": 6,
-    "fixed": 11,
+    "fixed": 13,
     "skipped": 0
   },
   "findings": [
@@ -225,7 +225,9 @@
       "title": "robots.txt blockiert /api/ ohne vorhandene API-Endpoints",
       "description": "Die robots.txt blockiert /api/, aber es gibt keine API-Endpoints im Projekt. Kein funktionales Problem, aber unnoetig und koennte verwirrend sein.",
       "location": "src/pages/robots.txt.ts:7",
-      "status": "open"
+      "status": "fixed",
+      "fixedIn": "Session 2026-02-19",
+      "fixNote": "Disallow /api/ entfernt (keine API vorhanden)"
     },
     {
       "id": "A11Y-01",
@@ -234,7 +236,9 @@
       "title": "Skip-to-Content Link nutzt outline:none ohne alternative Fokus-Anzeige",
       "description": "Der .skip-to-content:focus Style setzt outline: none (components.css:156). Obwohl der Link bei Fokus visuell durch top:0 sichtbar wird, ist das explizite Entfernen der Outline nicht WCAG-konform. Der globale :focus-visible Style wird hier ueberschrieben.",
       "location": "src/styles/components.css:154-157",
-      "status": "open"
+      "status": "fixed",
+      "fixedIn": "Session 2026-02-19",
+      "fixNote": "outline: 2px solid var(--accent) statt outline:none"
     },
     {
       "id": "A11Y-02",
@@ -336,6 +340,14 @@
       "findingsAdded": 0,
       "findingsFixed": 3,
       "notes": "SHA-Pinning (checkout+setup-node v6), permissions-Block, .nvmrc+engines"
+    },
+    {
+      "date": "2026-02-19",
+      "session": 4,
+      "phases": [],
+      "findingsAdded": 0,
+      "findingsFixed": 2,
+      "notes": "A11Y-01: outline:none → 2px solid var(--accent), SEO-03: Disallow /api/ entfernt"
     }
   ]
 }
