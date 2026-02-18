@@ -1,7 +1,7 @@
 {
   "version": 2,
   "created": "2026-02-18",
-  "lastUpdated": "2026-02-18",
+  "lastUpdated": "2026-02-19",
   "project": "astro-vitae",
   "detectedStack": {
     "frontend": {
@@ -74,7 +74,7 @@
     "high": 5,
     "medium": 12,
     "low": 6,
-    "fixed": 8,
+    "fixed": 11,
     "skipped": 0
   },
   "findings": [
@@ -103,7 +103,9 @@
       "title": "Keine .nvmrc oder engines-Feld fuer Node-Version",
       "description": "Die Node-Version ist nur im Dockerfile definiert (Node 24 fuer Prod, Node 22 fuer Dev), aber nicht in .nvmrc oder package.json engines. Lokale Entwickler koennten mit inkompatibler Node-Version arbeiten.",
       "location": "package.json, .nvmrc (fehlend)",
-      "status": "open"
+      "status": "fixed",
+      "fixedIn": "Session 2026-02-19",
+      "fixNote": ".nvmrc + engines in package.json hinzugefuegt"
     },
     {
       "id": "IST-04",
@@ -142,7 +144,9 @@
       "title": "GitHub Actions nicht per SHA gepinnt",
       "description": "Die CI-Workflow Actions (actions/checkout@v6, actions/setup-node@v6) sind per Major-Version-Tag statt per SHA gepinnt. Dies ist ein Supply-Chain-Risiko, da der Tag jederzeit auf neuen Code zeigen kann.",
       "location": ".github/workflows/ci.yml:14,17",
-      "status": "open"
+      "status": "fixed",
+      "fixedIn": "Session 2026-02-19",
+      "fixNote": "SHA-Pinning fuer checkout + setup-node v6"
     },
     {
       "id": "SEC-04",
@@ -151,7 +155,9 @@
       "title": "CI-Workflow hat keinen expliziten permissions-Block",
       "description": "Der GitHub Actions Workflow definiert keinen permissions-Block. Default-Permissions koennten zu grosszuegig sein. Empfehlung: permissions: { contents: read } explizit setzen.",
       "location": ".github/workflows/ci.yml",
-      "status": "open"
+      "status": "fixed",
+      "fixedIn": "Session 2026-02-19",
+      "fixNote": "permissions: contents: read hinzugefuegt"
     },
     {
       "id": "SEC-05",
@@ -322,6 +328,14 @@
       "phases": [],
       "findingsAdded": 0,
       "findingsFixed": 5
+    },
+    {
+      "date": "2026-02-19",
+      "session": 3,
+      "phases": [],
+      "findingsAdded": 0,
+      "findingsFixed": 3,
+      "notes": "SHA-Pinning (checkout+setup-node v6), permissions-Block, .nvmrc+engines"
     }
   ]
 }
