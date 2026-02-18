@@ -4,7 +4,6 @@ export const GET: APIRoute = ({ site }) => {
   const siteUrl = site?.href.replace(/\/$/, '') || 'https://example.com';
   const body = `User-agent: *
 Allow: /
-Disallow: /api/
 
 Sitemap: ${siteUrl}/sitemap-index.xml
 `;
