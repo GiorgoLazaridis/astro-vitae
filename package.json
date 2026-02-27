@@ -16,7 +16,7 @@
     "astro": "5.18.0"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.1.18",
+    "@tailwindcss/vite": "^4.2.1",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3"
   }
