@@ -9,12 +9,14 @@
   66% { transform: translate(-20px, 15px) scale(0.95); }
 }
 
-.blob-animate {
-  animation: blob-drift 20s ease-in-out infinite;
-}
+@media (prefers-reduced-motion: no-preference) {
+  .blob-animate {
+    animation: blob-drift 20s ease-in-out infinite;
+  }
 
-.blob-animate-reverse {
-  animation: blob-drift 25s ease-in-out infinite reverse;
+  .blob-animate-reverse {
+    animation: blob-drift 25s ease-in-out infinite reverse;
+  }
 }
 
 @utility animate-fade-up {
