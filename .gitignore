@@ -20,3 +20,5 @@ NUL
 !docs/
 !docs/**
 !docs/**/*.png
+.astro-audit-state.json
+.audit-orchestrator-state.json
