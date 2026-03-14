@@ -1,7 +1,7 @@
 {
   "version": 2,
   "created": "2026-02-18",
-  "lastUpdated": "2026-02-19",
+  "lastUpdated": "2026-03-14",
   "project": "astro-vitae",
   "detectedStack": {
     "frontend": {
@@ -196,7 +196,9 @@
       "title": "Font-Display ist 'optional' statt 'swap'",
       "description": "Die Fonts verwenden font-display: optional. Dies kann dazu fuehren, dass der Font bei langsamen Verbindungen gar nicht angezeigt wird (Fallback bleibt). Fuer eine CV-Seite, bei der die Typografie wichtig ist, waere font-display: swap besser geeignet, um die Schrift immer anzuzeigen, auch wenn ein kurzer FOUT auftritt.",
       "location": "src/styles/global.css:12,19",
-      "status": "open"
+      "status": "fixed",
+      "fixedIn": "Session 2026-02-19",
+      "fixNote": "War bereits auf swap geaendert (vor diesem Audit-Update)"
     },
     {
       "id": "SEO-01",
@@ -247,7 +249,9 @@
       "title": "Mobile Menu hat keine Fokus-Trap und kein Escape-to-Close",
       "description": "Das Mobile Menu (Nav.astro) kann geoeffnet und geschlossen werden, aber: 1) Es gibt keine Fokus-Trap (Tab kann aus dem Menu heraus navigieren), 2) Escape schliesst das Menu nicht. Beides sind WCAG 2.1 AA Anforderungen fuer Disclosure-Widgets.",
       "location": "src/components/Nav.astro:84-106",
-      "status": "open"
+      "status": "fixed",
+      "fixedIn": "Session 2026-03-14",
+      "fixNote": "Fokus-Trap, ESC-to-Close, Focus-Management (open→first-link, close→toggle-button), aria-label wechselt zwischen open/close"
     },
     {
       "id": "A11Y-03",
@@ -256,7 +260,9 @@
       "title": "Blob-Animationen im Hero respektieren prefers-reduced-motion nicht direkt",
       "description": "Die .blob-animate und .blob-animate-reverse Klassen laufen als dauerhaft animierte Elemente. Zwar werden in animations.css generell Animationen bei prefers-reduced-motion: reduce auf 0.01ms gesetzt, aber die blob-Animationen sind aria-hidden='true' und rein dekorativ. Der globale reduced-motion Fix greift hier, daher nur LOW.",
       "location": "src/styles/animations.css:12-18, src/components/Hero.astro:16-18",
-      "status": "open"
+      "status": "fixed",
+      "fixedIn": "Session 2026-02-19",
+      "fixNote": "Bereits doppelt abgesichert: blob-Animationen in prefers-reduced-motion:no-preference gewrappt (Zeile 12-20) + globaler reduce-Block (Zeile 64-100)"
     },
     {
       "id": "CODE-01",

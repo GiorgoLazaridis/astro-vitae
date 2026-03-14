@@ -61,7 +61,7 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
           <circle cx="12" cy="12" r="5" /><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
         </svg>
       </button>
-      <button id="mobile-menu-toggle" class="md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg" style="color: var(--text-muted);" aria-label={t('a11y.openMenu')} aria-expanded="false" aria-controls="mobile-menu">
+      <button id="mobile-menu-toggle" class="md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg" style="color: var(--text-muted);" aria-label={t('a11y.openMenu')} aria-expanded="false" aria-controls="mobile-menu" data-label-open={t('a11y.openMenu')} data-label-close={t('a11y.closeMenu')}>
         <svg class="hamburger-icon w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M4 6h16M4 12h16M4 18h16" />
         </svg>
@@ -84,24 +84,90 @@ const sectionHref = (id: string) => `${homeHref}#${id}`;
 <script>
   document.addEventListener('DOMContentLoaded', () => {
 
-    const toggle = document.getElementById('mobile-menu-toggle');
+    const toggle = document.getElementById('mobile-menu-toggle') as HTMLButtonElement | null;
     const menu = document.getElementById('mobile-menu');
+
+    function openMobileMenu() {
+      if (!toggle || !menu) return;
+      menu.classList.remove('hidden');
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', toggle.dataset.labelClose || '');
+      toggle.querySelector('.hamburger-icon')?.classList.add('hidden');
+      toggle.querySelector('.close-icon')?.classList.remove('hidden');
+
+      // Focus first link in menu
+      const firstLink = menu.querySelector<HTMLElement>('.mobile-nav-link');
+      firstLink?.focus();
+
+      // Add focus trap and ESC listener
+      document.addEventListener('keydown', handleMenuKeydown);
+    }
+
+    function closeMobileMenu() {
+      if (!toggle || !menu) return;
+      menu.classList.add('hidden');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', toggle.dataset.labelOpen || '');
+      toggle.querySelector('.hamburger-icon')?.classList.remove('hidden');
+      toggle.querySelector('.close-icon')?.classList.add('hidden');
+
+      // Return focus to toggle button
+      toggle.focus();
+
+      document.removeEventListener('keydown', handleMenuKeydown);
+    }
+
+    function handleMenuKeydown(e: KeyboardEvent) {
+      if (!menu || !toggle) return;
+
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeMobileMenu();
+        return;
+      }
+
+      if (e.key !== 'Tab') return;
+
+      // Collect all focusable elements inside menu + the toggle button
+      const focusableEls = [
+        toggle,
+        ...Array.from(menu.querySelectorAll<HTMLElement>('a, button, [tabindex]:not([tabindex="-1"])'))
+      ];
+
+      if (focusableEls.length === 0) return;
+
+      const firstEl = focusableEls[0];
+      const lastEl = focusableEls[focusableEls.length - 1];
+
+      if (e.shiftKey) {
+        // Shift+Tab: wrap from first to last
+        if (document.activeElement === firstEl) {
+          e.preventDefault();
+          lastEl.focus();
+        }
+      } else {
+        // Tab: wrap from last to first
+        if (document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl.focus();
+        }
+      }
+    }
+
     if (toggle && menu) {
       toggle.addEventListener('click', () => {
-        const isHidden = menu.classList.toggle('hidden');
-        toggle.setAttribute('aria-expanded', isHidden ? 'false' : 'true');
-        toggle.querySelector('.hamburger-icon')?.classList.toggle('hidden', !isHidden);
-        toggle.querySelector('.close-icon')?.classList.toggle('hidden', isHidden);
+        const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+        if (isOpen) {
+          closeMobileMenu();
+        } else {
+          openMobileMenu();
+        }
       });
     }
+
     document.querySelectorAll('.mobile-nav-link').forEach((link) => {
       link.addEventListener('click', () => {
-        if (menu) menu.classList.add('hidden');
-        if (toggle) {
-          toggle.setAttribute('aria-expanded', 'false');
-          toggle.querySelector('.hamburger-icon')?.classList.remove('hidden');
-          toggle.querySelector('.close-icon')?.classList.add('hidden');
-        }
+        closeMobileMenu();
       });
     });
 
