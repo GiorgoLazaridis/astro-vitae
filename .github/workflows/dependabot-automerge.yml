@@ -1,18 +1,53 @@
 name: Dependabot Auto-Merge
 
-on: pull_request
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  automerge:
-    if: github.actor == 'dependabot[bot]'
+  auto-merge:
+    if: >-
+      github.actor == 'dependabot[bot]' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - name: Auto-Merge aktivieren
-        run: gh pr merge "$PR_URL" --merge --auto
+      - name: Get PR number from workflow run
+        id: pr
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            const run = context.payload.workflow_run;
+            const prs = run.pull_requests;
+            if (prs && prs.length > 0) {
+              return prs[0].number;
+            }
+            const head = run.head_sha;
+            const result = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: `${context.repo.owner}:${run.head_branch}`,
+              state: 'open',
+            });
+            if (result.data.length > 0) {
+              return result.data[0].number;
+            }
+            throw new Error('No PR found for this workflow run');
+
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@21025c705c08248db411dc16f3619e6b5f9ea21a # v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto-merge patch and minor updates
+        if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+        run: gh pr merge "$PR_NUMBER" --auto --squash --repo "${{ github.repository }}"
         env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_NUMBER: ${{ steps.pr.outputs.result }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
