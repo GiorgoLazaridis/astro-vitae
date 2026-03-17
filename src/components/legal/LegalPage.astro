@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { useTranslations } from '../../i18n/utils';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import type { Locale } from '../../i18n/config';
+
+interface Props {
+  title: string;
+  description: string;
+  heading: string;
+  lang: Locale;
+}
+
+const { title, description, heading, lang } = Astro.props;
+const t = useTranslations(lang);
+const homeHref = getRelativeLocaleUrl(lang, '');
+---
+<BaseLayout title={title} description={description} lang={lang}>
+  <section class="px-6" style="padding-top: calc(var(--space-section) + 2rem); padding-bottom: var(--space-section);">
+    <div class="mx-auto max-w-3xl">
+      <a href={homeHref} class="inline-flex items-center gap-1 text-sm mb-8 min-h-[44px] transition-colors hover:text-[var(--accent)]" style="color: var(--text-muted);" aria-label={t('a11y.goHome')}>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 19l-7-7 7-7"/></svg>
+        {t('legal.back')}
+      </a>
+      <h1 class="text-3xl font-bold tracking-tight mb-10 accent-line" data-animate="fade-up" style="color: var(--text);">{heading}</h1>
+      <div class="space-y-8 text-sm leading-relaxed" data-animate="fade-up" data-animate-delay="0.1" style="color: var(--text-muted);">
+        <slot />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

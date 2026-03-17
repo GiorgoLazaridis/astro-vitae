@@ -21,11 +21,11 @@ const { heading, id, entries, bgAlt } = Astro.props;
   <div class="mx-auto max-w-4xl">
     <h2 class="font-bold accent-line" data-animate="fade-up" style={`font-size: var(--heading-2); line-height: var(--leading-tight); color: var(--text); margin-bottom: var(--space-section-inner);`}>{heading}</h2>
 
-    <div class="relative mt-12" role="list">
+    <ol class="relative mt-12 list-none p-0 m-0">
       <div data-timeline-line class="absolute left-[15px] top-0 bottom-0 w-[2px]" style="background: linear-gradient(180deg, var(--accent), var(--border)); transform-origin: top;" aria-hidden="true"></div>
 
       {entries.map((entry, i) => (
-        <div data-timeline-entry role="listitem" aria-label={`${entry.title || entry.degree} — ${entry.organization || entry.institution}`} class={`relative pl-12 ${i < entries.length - 1 ? 'mb-10' : ''}`}>
+        <li data-timeline-entry aria-label={`${entry.title || entry.degree} — ${entry.organization || entry.institution}`} class={`relative pl-12 ${i < entries.length - 1 ? 'mb-10' : ''}`}>
           <div data-timeline-dot
                class={`absolute left-[9px] top-2 rounded-full border-2 ${i === 0 ? 'w-[14px] h-[14px]' : 'w-[12px] h-[12px]'}`}
                style={`border-color: var(--accent); background: ${i === 0 ? 'var(--accent)' : 'var(--bg)'};`}>
@@ -61,9 +61,9 @@ const { heading, id, entries, bgAlt } = Astro.props;
               </ul>
             )}
           </div>
-        </div>
+        </li>
       ))}
-    </div>
+    </ol>
   </div>
 </section>
 )}

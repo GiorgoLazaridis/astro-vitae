@@ -10,3 +10,22 @@ services:
       - .:/app
       - /app/node_modules
     command: npm run dev -- --host 0.0.0.0
+
+  production:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: astro-vitae
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx
+      - /var/log/nginx
+      - /var/run
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

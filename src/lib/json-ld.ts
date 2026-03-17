@@ -13,7 +13,6 @@ export function buildPersonJsonLd(lang: Locale) {
     mainEntityOfPage: {
       "@type": "ProfilePage",
       "@id": `${cvData.site.url}/`,
-      dateModified: new Date().toISOString().split('T')[0],
     },
     name: cvData.personal.name,
     jobTitle: personalTitle,
