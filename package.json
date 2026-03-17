@@ -11,9 +11,9 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.7",
+    "@astrojs/check": "^0.9.8",
     "@astrojs/sitemap": "^3.7.1",
-    "astro": "6.0.4"
+    "astro": "6.0.5"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.2.1",

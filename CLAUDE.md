@@ -5,7 +5,7 @@ Open-Source Astro Template fuer Lebenslauf/Portfolio. Single-file Config (`cv-da
 Live-Demo: lazaridis.me (wird auch als persoenlicher CV genutzt)
 
 ## Stack
-- **Framework:** Astro 5.x (statisch, kein SSR)
+- **Framework:** Astro 6.x (statisch, kein SSR)
 - **Styling:** Tailwind CSS v4
 - **Sprache:** TypeScript
 - **Fonts:** Self-hosted (Geist Regular + Bold, WOFF2)
@@ -40,12 +40,11 @@ npm run build     # Statischer Build nach dist/
 npm run preview   # Build-Vorschau
 ```
 
-## Astro 6 Migration (geplant)
-Bei Migration auf Astro 6:
-- **i18n Breaking Change:** `redirectToDefaultLocale: true` explizit in `astro.config.ts` routing-Block setzen (Default geaendert: `true` → `false`)
-- **Vite 7:** Wird automatisch mitgezogen, Config bereits ESM (.ts)
-- **Node:** Bereits >=22, kein Handlungsbedarf
-- **Upgrade-Command:** `npx @astrojs/upgrade beta` (solange Beta) oder `npx @astrojs/upgrade` (wenn Stable)
+## Astro 6 Migration (abgeschlossen 2026-03-17)
+- Migration von Astro 5 → 6.0.5 erfolgreich
+- **i18n:** `redirectToDefaultLocale` Default geaendert (`true` → `false`), kein Handlungsbedarf da `prefixDefaultLocale: false`
+- **Vite 7:** Automatisch mitgezogen
+- **Node:** Bereits >=22, passt
 
 ## Open-Source Hinweis
 Dieses Repo ist oeffentlich (MIT-Lizenz). Keine persoenlichen Daten committen ausser in cv-data.ts.
