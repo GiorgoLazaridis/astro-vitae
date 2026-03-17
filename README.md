@@ -2,8 +2,8 @@
 
 A modern, single-page CV/resume template built with Astro, Tailwind CSS, and TypeScript. Edit one file, deploy everywhere.
 
-[![Astro](https://img.shields.io/badge/Astro-5.17-BC52EE?logo=astro&logoColor=white)](https://astro.build/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Astro](https://img.shields.io/badge/Astro-6.0-BC52EE?logo=astro&logoColor=white)](https://astro.build/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.2-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -29,10 +29,10 @@ A modern, single-page CV/resume template built with Astro, Tailwind CSS, and Typ
 - **Print-optimized** -- press Ctrl+P or use the Download PDF button
 - **Optional bilingual support** (EN/DE) with automatic language switcher
 - **Schema.org JSON-LD** structured data for SEO
-- **WCAG 2.2 AA accessible** -- keyboard navigation, ARIA labels, skip links, 44px touch targets
+- **WCAG 2.2 AA accessible** -- keyboard navigation, focus traps, ARIA labels, skip links, 44px touch targets
 - **GDPR compliant** -- no cookies, no external requests, self-hosted fonts
-- **Docker dev environment** included (dev + production)
-- **~153 KB page weight** -- static output, no client-side framework
+- **Docker ready** -- dev + production containers included
+- **~280 KB total build** -- static output, zero client-side JS bundles
 
 ## Quick Start
 
@@ -61,16 +61,19 @@ npm run build
 **Docker alternative:**
 
 ```bash
-docker compose up
-# Dev server at http://localhost:4321
+# Development with hot reload
+docker compose up dev
+
+# Production build (Nginx + security headers)
+docker compose up production
 ```
 
 ## Tech Stack
 
 | Technology | Version | Purpose |
 |---|---|---|
-| [Astro](https://astro.build/) | 5.17 | Static site generator |
-| [Tailwind CSS](https://tailwindcss.com/) | 4.1 | Utility-first CSS |
+| [Astro](https://astro.build/) | 6.0 | Static site generator |
+| [Tailwind CSS](https://tailwindcss.com/) | 4.2 | Utility-first CSS |
 | [TypeScript](https://www.typescriptlang.org/) | 5.9 | Type safety + IDE autocomplete |
 | [Geist](https://vercel.com/font) | -- | Self-hosted font (Regular + Bold) |
 
@@ -91,7 +94,7 @@ astro-vitae/
 │   │   ├── Portfolio.astro      # Projects showcase
 │   │   ├── Contact.astro        # Contact section
 │   │   ├── Nav.astro            # Navigation bar with dark mode toggle
-│   │   └── LanguageSwitcher.astro
+│   │   └── legal/               # Shared legal page components
 │   ├── layouts/
 │   │   └── BaseLayout.astro     # HTML head, SEO, OG tags, JSON-LD
 │   ├── pages/
@@ -99,15 +102,17 @@ astro-vitae/
 │   │   ├── 404.astro            # Error page with auto-redirect
 │   │   ├── impressum.astro      # Imprint (legal)
 │   │   ├── datenschutz.astro    # Privacy policy
+│   │   ├── barrierefreiheit.astro # Accessibility statement (BFSG)
 │   │   └── [locale]/            # Bilingual route variants
 │   ├── i18n/                    # Internationalization config + utilities
+│   ├── lib/                     # JSON-LD structured data builder
 │   ├── styles/                  # Global CSS, tokens, animations, print
 │   └── assets/                  # Static assets processed by Astro
 ├── public/
 │   └── fonts/                   # Geist-Regular.woff2, Geist-Bold.woff2
 ├── Dockerfile                   # Multi-stage production build (Node + Nginx)
 ├── Dockerfile.dev               # Development container
-├── docker-compose.yml           # Dev environment with hot reload
+├── docker-compose.yml           # Dev + production services
 ├── nginx.conf                   # Production Nginx config with security headers
 ├── astro.config.ts
 ├── tsconfig.json

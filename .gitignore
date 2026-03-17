@@ -11,14 +11,24 @@ NUL
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# Claude Code / AI tooling
+.claude/
+CLAUDE.md
+
+# Audit state files
+.audit-state.json
+.astro-audit-state.json
+.audit-orchestrator-state.json
+.freshness-state.json
+
+# Temporary / planning
 .planning/
 .playwright-mcp/
+
+# Screenshots (allow docs/)
 *.png
 *.jpeg
-
-# Allow tracked screenshots in docs/
 !docs/
 !docs/**
 !docs/**/*.png
-.astro-audit-state.json
-.audit-orchestrator-state.json

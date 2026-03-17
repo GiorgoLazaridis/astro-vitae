@@ -1,5 +1,3 @@
-# Dependabot-Vorlage fuer gl-pipeline Projekte
-# Kopieren nach: .github/dependabot.yml (ggf. npm-Sektion anpassen)
 version: 2
 updates:
   - package-ecosystem: "npm"
