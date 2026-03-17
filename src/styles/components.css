@@ -41,6 +41,14 @@ section a[target="_blank"]:not(.btn-cta):not(.skill-pill):hover {
   background-clip: text;
 }
 
+@media (forced-colors: active) {
+  .gradient-text,
+  .gradient-text-animated {
+    -webkit-text-fill-color: currentColor;
+    background: none;
+  }
+}
+
 .gradient-text-animated {
   background: linear-gradient(135deg, var(--accent), var(--accent-secondary), var(--accent));
   background-size: 200% 200%;

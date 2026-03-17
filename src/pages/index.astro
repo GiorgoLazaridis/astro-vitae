@@ -23,8 +23,8 @@ const experienceEntries = resolveExperienceEntries(lang);
 const educationEntries = resolveEducationEntries(lang);
 ---
 <BaseLayout title={siteTitle} description={siteDescription} lang={lang}>
-  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-  <script type="application/ld+json" set:html={JSON.stringify(webSiteJsonLd)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(webSiteJsonLd)} />
   <div>
     <Hero />
     <About />
